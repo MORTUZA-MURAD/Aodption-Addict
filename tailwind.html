@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adoption Addict - Glassmorphism Edition</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- CUSTOM STYLES FROM YOUR PROVIDED CODE --- */
+        
+        /* Global Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDelay {
+            0%, 30% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInStagger {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .animate-fade-in { animation: fadeIn 1s ease-out forwards; }
+        .animate-fade-in-delay { animation: fadeInDelay 1.5s ease-out forwards; }
+
+        /* SCROLL REVEAL ANIMATION CLASSES */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Navbar Glassmorphism */
+        .navbar {
+            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.6); /* Semi-transparent dark */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .navbar.scrolled {
+            background: rgba(15, 23, 42, 0.9);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Navigation Links with Liquid Ink Effect */
+        .nav-link {
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #a855f7, #3b82f6);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-link:hover { color: white; }
+        .nav-link:hover::after { width: 100%; }
+        .nav-link.active { color: #a855f7; font-weight: 700; }
+        .nav-link.active::after { width: 100%; }
+
+        /* Glass Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* CTA Button & Ripple */
+        .cta-button {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
+        }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-animation 0.6s ease-out;
+            pointer-events: none;
+        }
+        @keyframes ripple-animation {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .mobile-menu.active { opacity: 1; visibility: visible; }
+        .mobile-nav-item { opacity: 0; transform: translateX(-50px); }
+        .mobile-menu.active .mobile-nav-item { animation: slideInStagger 0.5s ease forwards; }
+        
+        /* Stagger Delays for Mobile Menu */
+        .mobile-menu.active .mobile-nav-item:nth-child(1) { animation-delay: 0.1s; }
+        .mobile-menu.active .mobile-nav-item:nth-child(2) { animation-delay: 0.2s; }
+        .mobile-menu.active .mobile-nav-item:nth-child(3) { animation-delay: 0.3s; }
+        .mobile-menu.active .mobile-nav-item:nth-child(4) { animation-delay: 0.4s; }
+        .mobile-menu.active .mobile-nav-item:nth-child(5) { animation-delay: 0.5s; }
+        .mobile-menu.active .mobile-nav-item:nth-child(6) { animation-delay: 0.6s; }
+
+        /* FAQ Accordion - Dark Theme Adaptation */
+        .accordion-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .accordion-header {
+            width: 100%;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            transition: background 0.3s;
+        }
+        .accordion-header:hover { background: rgba(255, 255, 255, 0.1); }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            color: #d1d5db; /* gray-300 */
+            background: transparent;
+        }
+        .accordion-content p { padding: 1rem; }
+        
+        /* Form Inputs */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .glass-input:focus {
+            outline: none;
+            border-color: #a855f7;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Page Management */
+        .page-section { display: none; padding-top: 100px; padding-bottom: 50px; width: 100%; }
+        /* Using flex-grow logic on the main container instead of fixed heights */
+        .page-section.active { display: block; animation: fadeIn 0.5s; }
+        
+        /* Specific alignment for centered pages like Login */
+        .page-section.centered {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100%;
+        }
+        .page-section.centered.active { display: flex; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #a855f7, #3b82f6); border-radius: 5px; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen text-gray-100 font-sans flex flex-col">
+
+    <!-- GLASS NAVBAR -->
+    <nav id="navbar" class="navbar fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a onclick="showPage('home')" class="flex items-center gap-3 cursor-pointer">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-paw text-white text-lg "></i>
+                    </div>
+                    <span class="text-white font-bold text-xl tracking-wide">Adoption Addict</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <ul class="hidden md:flex items-center gap-8">
+                    <li><a onclick="showPage('home')" class="nav-link active">Home</a></li>
+                    <li><a onclick="showPage('about')" class="nav-link">About</a></li>
+                    <li><a onclick="showPage('animals')" class="nav-link">Animals</a></li>
+                    <li><a onclick="showPage('prescribe')" class="nav-link">Vet Directory</a></li>
+                    <li><a onclick="showPage('post')" class="nav-link">Post</a></li>
+                </ul>
+
+                <!-- Login Button -->
+                <div class="hidden md:block">
+                    <button onclick="showPage('login')" class="cta-button px-6 py-2 rounded-full font-semibold">
+                        Login
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden text-white text-2xl p-2">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div id="mobileMenu" class="mobile-menu fixed inset-0 z-40 flex items-center justify-center">
+        <button id="closeMobileMenu" class="absolute top-8 right-8 text-white text-3xl">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <ul class="text-center space-y-8">
+            <li class="mobile-nav-item"><a onclick="showPage('home'); closeMobileMenuFunc()" class="text-3xl font-bold text-white hover:text-purple-400">Home</a></li>
+            <li class="mobile-nav-item"><a onclick="showPage('about'); closeMobileMenuFunc()" class="text-3xl font-bold text-white hover:text-purple-400">About</a></li>
+            <li class="mobile-nav-item"><a onclick="showPage('animals'); closeMobileMenuFunc()" class="text-3xl font-bold text-white hover:text-purple-400">Animals</a></li>
+            <li class="mobile-nav-item"><a onclick="showPage('prescribe'); closeMobileMenuFunc()" class="text-3xl font-bold text-white hover:text-purple-400">Vets</a></li>
+            <li class="mobile-nav-item"><a onclick="showPage('login'); closeMobileMenuFunc()" class="text-3xl font-bold text-white hover:text-purple-400">Login</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT WRAPPER (Pushes footer down) -->
+    <main class="flex-grow flex flex-col w-full relative pt-20">
+
+        <!-- ==================== HOME PAGE ==================== -->
+        <section id="home" class="page-section active min-h-screen">
+            <!-- Hero -->
+            <div class="h-[80vh] flex flex-col items-center justify-center text-center px-4 relative">
+                <h1 class="text-6xl md:text-8xl font-bold text-white mb-6 animate-fade-in drop-shadow-lg">
+                    Find Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Soulmate</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mb-12 animate-fade-in-delay">
+                    Connect with loving families and pets in need of a forever home. Your journey starts here.
+                </p>
+                
+                <button onclick="showPage('animals')" class="cta-button px-8 py-4 rounded-full text-lg font-bold shadow-xl animate-fade-in-delay">
+                    Find a Pet
+                </button>
+
+                <!-- Bounce Arrow -->
+                <div class="absolute bottom-10 animate-bounce">
+                    <i class="fa-solid fa-chevron-down text-white text-3xl opacity-50"></i>
+                </div>
+            </div>
+
+            <!-- Stats (ADDED REVEAL-ON-SCROLL) -->
+            <div class="max-w-7xl mx-auto px-6 mb-24 reveal-on-scroll">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-card p-8 text-center">
+                        <div class="text-5xl font-bold text-purple-400 mb-2">2,500+</div>
+                        <div class="text-gray-400">Pets Adopted</div>
+                    </div>
+                    <div class="glass-card p-8 text-center">
+                        <div class="text-5xl font-bold text-blue-400 mb-2">50+</div>
+                        <div class="text-gray-400">Shelter Partners</div>
+                    </div>
+                    <div class="glass-card p-8 text-center">
+                        <div class="text-5xl font-bold text-green-400 mb-2">100%</div>
+                        <div class="text-gray-400">Love Guaranteed</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trusted Organizations (ADDED REVEAL-ON-SCROLL) -->
+            <div class="max-w-7xl mx-auto px-6 mb-24 text-center reveal-on-scroll">
+                <h2 class="text-3xl font-bold text-white mb-2">Trusted by Leading Organizations</h2>
+                <p class="text-gray-400 mb-12">We partner with certified veterinary associations</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="glass-card p-6 flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-hospital text-4xl text-gray-500 mb-4"></i>
+                        <span class="text-sm font-semibold text-gray-300">BD Vet Association</span>
+                    </div>
+                    <div class="glass-card p-6 flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-paw text-4xl text-gray-500 mb-4"></i>
+                        <span class="text-sm font-semibold text-gray-300">Animal Welfare</span>
+                    </div>
+                    <div class="glass-card p-6 flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-certificate text-4xl text-gray-500 mb-4"></i>
+                        <span class="text-sm font-semibold text-gray-300">Pet Care Board</span>
+                    </div>
+                    <div class="glass-card p-6 flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-shield-halved text-4xl text-gray-500 mb-4"></i>
+                        <span class="text-sm font-semibold text-gray-300">Security Standards</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Support (ADDED REVEAL-ON-SCROLL) -->
+            <div class="max-w-7xl mx-auto px-6 mb-24 reveal-on-scroll">
+                <div class="flex flex-col lg:flex-row gap-12 items-center">
+                    <div class="lg:w-1/3">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-xl">
+                                <i class="fa-solid fa-truck-medical"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-white">24/7 Emergency</h2>
+                                <span class="text-red-400 font-bold text-sm">Available 365 Days</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 mb-8">
+                            Pet emergency? Don't panic. Our emergency support network is here to help when you need it most.
+                        </p>
+                        <button onclick="showPage('prescribe')" class="w-full py-3 border-2 border-red-500 text-red-400 rounded-xl font-bold hover:bg-red-500 hover:text-white transition-colors">
+                            <i class="fa-solid fa-location-dot mr-2"></i> Find Emergency Vet
+                        </button>
+                    </div>
+                    <div class="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="glass-card p-6 bg-red-900/10 border-red-500/30">
+                            <div class="w-10 h-10 rounded bg-red-500 flex items-center justify-center text-white mb-4"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                            <h3 class="font-bold text-white mb-2">Critical Care</h3>
+                            <p class="text-sm text-gray-400">Severe injuries, poisoning, breathing issues.</p>
+                        </div>
+                        <div class="glass-card p-6 bg-blue-900/10 border-blue-500/30">
+                            <div class="w-10 h-10 rounded bg-blue-500 flex items-center justify-center text-white mb-4"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            <h3 class="font-bold text-white mb-2">Lost Pet</h3>
+                            <p class="text-sm text-gray-400">Report missing pets immediately.</p>
+                        </div>
+                        <div class="glass-card p-6 bg-green-900/10 border-green-500/30">
+                            <div class="w-10 h-10 rounded bg-green-500 flex items-center justify-center text-white mb-4"><i class="fa-solid fa-house"></i></div>
+                            <h3 class="font-bold text-white mb-2">Rescue Care</h3>
+                            <p class="text-sm text-gray-400">Emergency foster homes for rescues.</p>
+                        </div>
+                        <div class="glass-card p-6 bg-purple-900/10 border-purple-500/30">
+                            <div class="w-10 h-10 rounded bg-purple-500 flex items-center justify-center text-white mb-4"><i class="fa-solid fa-pills"></i></div>
+                            <h3 class="font-bold text-white mb-2">Poison Control</h3>
+                            <p class="text-sm text-gray-400">Guidance on toxic substance ingestion.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Split (ADDED REVEAL-ON-SCROLL) -->
+            <div class="max-w-7xl mx-auto px-6 mb-24 reveal-on-scroll">
+                <div class="text-center mb-10">
+                    <span class="bg-yellow-500/20 text-yellow-400 px-4 py-1 rounded-full text-xs font-bold tracking-wide">QUICK HELP</span>
+                    <h2 class="text-3xl font-bold text-white mt-4">Frequently Asked Questions</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left Column -->
+                    <div>
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                Is pet adoption free? <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Yes! We believe loving homes shouldn't have financial barriers. Adoption through our platform is completely free.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                How do I find a vet? <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Use our 'Vet Directory' page to see a list of trusted professionals in your area, or use the Emergency button for urgent care.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Column -->
+                    <div>
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                Is there a mobile app? <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p>We are currently developing mobile apps for iOS and Android, scheduled to launch in late 2024.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                How does fostering work? <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Fostering provides a temporary home. We supply food and medical care while you provide love and shelter.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Stories (ADDED REVEAL-ON-SCROLL) -->
+            <div class="max-w-7xl mx-auto px-6 reveal-on-scroll">
+                <h2 class="text-3xl font-bold text-white text-center mb-12">Success Stories</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-card overflow-hidden">
+                        <img src="https://loremflickr.com/400/250/dog,family" alt="Story" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">Smith Family & Rex</h3>
+                            <p class="text-gray-400 italic">"Rex brought so much joy to our lives. The process was smooth!"</p>
+                        </div>
+                    </div>
+                    <div class="glass-card overflow-hidden">
+                        <img src="https://loremflickr.com/400/250/cat,girl" alt="Story" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">Sarah & Luna</h3>
+                            <p class="text-gray-400 italic">"Luna is the perfect companion for my apartment life."</p>
+                        </div>
+                    </div>
+                    <div class="glass-card overflow-hidden">
+                        <img src="https://loremflickr.com/400/250/parrot" alt="Story" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">Mike & Chirpy</h3>
+                            <p class="text-gray-400 italic">"Adopting a senior bird was the best decision ever."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== ABOUT PAGE ==================== -->
+        <section id="about" class="page-section">
+            <div class="max-w-4xl mx-auto px-6">
+                <h1 class="text-4xl font-bold text-white text-center mb-8">About Adoption Addict</h1>
+                
+                <!-- Intro Card -->
+                <div class="glass-card p-8 mb-12">
+                    <p class="text-lg text-gray-300 leading-relaxed text-center">
+                        At Adoption Addict, we are more than just a platform; we are a movement dedicated to rewriting the stories of homeless pets. Our mission is to bridge the gap between compassionate hearts and wagging tails, ensuring that every adoption is a seamless journey of love and connection. We leverage technology to simplify the adoption process, provide essential resources for new pet parents, and build a vibrant community where unconditional love finds its forever home.
+                    </p>
+                </div>
+
+                <!-- NEW: WHAT WE DO SECTION -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-bold text-white mb-6 text-left border-l-4 border-purple-500 pl-4">What We Do</h2>
+                    <div class="glass-card p-8">
+                        <ul class="space-y-4 text-gray-300">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-green-400 mt-1"></i>
+                                <span><strong class="text-white">Pet Matching Service:</strong> Our unique algorithm helps match your lifestyle with the perfect pet personality.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-green-400 mt-1"></i>
+                                <span><strong class="text-white">Adoption Portal:</strong> Browse hundreds of pets from shelters and rescue organizations nationwide.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-green-400 mt-1"></i>
+                                <span><strong class="text-white">Community Events:</strong> Adoption fairs, training workshops, and pet-friendly gatherings.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-green-400 mt-1"></i>
+                                <span><strong class="text-white">Low-cost Vet Clinic:</strong> Affordable healthcare services ensuring every pet stays happy, healthy, and vaccinated without breaking the bank.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-green-400 mt-1"></i>
+                                <span><strong class="text-white">Lost and Found Pet:</strong> A dedicated community network and alert system to help reunite lost furry friends with their worried families.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-green-400 mt-1"></i>
+                                <span><strong class="text-white">Pet Care Assistance:</strong> Comprehensive guidance, advice, and support for both first-time owners and seasoned pet parents.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-check text-green-400 mt-1"></i>
+                                <span><strong class="text-white">Pet Resource Center:</strong> A one-stop hub for training tips, nutritional advice, behavior guides, and emergency contacts.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- TEAM SECTION -->
+                <h2 class="text-3xl font-bold text-white mb-8 text-left border-l-4 border-blue-500 pl-4">Meet Our Team</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div class="glass-card p-6 transform hover:scale-105 transition-transform duration-300">
+                        <div class="w-20 h-20 mx-auto bg-gray-700 rounded-full mb-4 flex items-center justify-center text-2xl">👨‍💼</div>
+                        <h3 class="text-xl font-bold text-white">Galib Mahmud</h3>
+                        <p class="text-purple-400 font-medium">Founder & CEO</p>
+                    </div>
+                    <div class="glass-card p-6 transform hover:scale-105 transition-transform duration-300">
+                        <div class="w-20 h-20 mx-auto bg-gray-700 rounded-full mb-4 flex items-center justify-center text-2xl">👨‍⚕️</div>
+                        <h3 class="text-xl font-bold text-white">Sakib Ahmed</h3>
+                        <p class="text-purple-400 font-medium">Head Veterinarian</p>
+                    </div>
+                    <div class="glass-card p-6 transform hover:scale-105 transition-transform duration-300">
+                        <div class="w-20 h-20 mx-auto bg-gray-700 rounded-full mb-4 flex items-center justify-center text-2xl">🧑‍💻</div>
+                        <h3 class="text-xl font-bold text-white">Mortuza Murad</h3>
+                        <p class="text-purple-400 font-medium">Adoption Coordinator</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== ANIMALS PAGE ==================== -->
+        <section id="animals" class="page-section">
+            <div class="max-w-7xl mx-auto px-6">
+                <h1 class="text-4xl font-bold text-white text-center mb-12">Find Your Companion</h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div onclick="showPage('dogs-page')" class="glass-card cursor-pointer overflow-hidden group">
+                        <div class="h-64 overflow-hidden">
+                            <img src="https://loremflickr.com/400/300/dog" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-2xl font-bold text-white">Dogs</h3>
+                            <p class="text-gray-400 mt-2">Loyal companions waiting for you</p>
+                        </div>
+                    </div>
+                    <div onclick="showPage('cats-page')" class="glass-card cursor-pointer overflow-hidden group">
+                        <div class="h-64 overflow-hidden">
+                            <img src="https://loremflickr.com/400/300/cat" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-2xl font-bold text-white">Cats</h3>
+                            <p class="text-gray-400 mt-2">Independent and loving friends</p>
+                        </div>
+                    </div>
+                    <div onclick="showPage('birds-page')" class="glass-card cursor-pointer overflow-hidden group">
+                        <div class="h-64 overflow-hidden">
+                            <img src="https://loremflickr.com/400/300/bird" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-2xl font-bold text-white">Birds</h3>
+                            <p class="text-gray-400 mt-2">Colorful singers for your home</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DOGS PAGE ==================== -->
+        <section id="dogs-page" class="page-section">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <h1 class="text-4xl font-bold text-white">Adopt a Dog</h1>
+                    <button onclick="showPage('animals')" class="px-6 py-2 border border-white/20 rounded-full text-white hover:bg-white/10">
+                        ← Back to Categories
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Dog 1 -->
+                    <div class="glass-card overflow-hidden">
+                        <img src="https://loremflickr.com/400/300/golden,retriever" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-2xl font-bold text-white">Max</h3>
+                                <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs font-bold">MALE</span>
+                            </div>
+                            <p class="text-gray-400 text-sm font-bold uppercase tracking-wider mb-4">Golden Retriever Mix</p>
+                            <div class="flex items-center text-gray-300 text-sm mb-6">
+                                <i class="fa-solid fa-location-dot text-red-400 mr-2"></i> Uttara, Sector 4
+                            </div>
+                            <button onclick="showPage('login')" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-bold transition-colors">
+                                Adopt Me
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Dog 2 -->
+                    <div class="glass-card overflow-hidden">
+                        <img src="https://loremflickr.com/400/300/labrador" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-2xl font-bold text-white">Bella</h3>
+                                <span class="bg-pink-500/20 text-pink-300 px-3 py-1 rounded-full text-xs font-bold">FEMALE</span>
+                            </div>
+                            <p class="text-gray-400 text-sm font-bold uppercase tracking-wider mb-4">Labrador</p>
+                            <div class="flex items-center text-gray-300 text-sm mb-6">
+                                <i class="fa-solid fa-location-dot text-red-400 mr-2"></i> Dhanmondi
+                            </div>
+                            <button onclick="showPage('login')" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-bold transition-colors">
+                                Adopt Me
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== CATS PAGE ==================== -->
+        <section id="cats-page" class="page-section">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <h1 class="text-4xl font-bold text-white">Adopt a Cat</h1>
+                    <button onclick="showPage('animals')" class="px-6 py-2 border border-white/20 rounded-full text-white hover:bg-white/10">
+                        ← Back to Categories
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="glass-card overflow-hidden">
+                        <img src="https://loremflickr.com/400/300/persian,cat" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-white">Luna</h3>
+                            <p class="text-gray-400 mb-4">Persian • 3 Years</p>
+                            <button onclick="showPage('login')" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-bold">Adopt Me</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== BIRDS PAGE ==================== -->
+        <section id="birds-page" class="page-section">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <h1 class="text-4xl font-bold text-white">Adopt a Bird</h1>
+                    <button onclick="showPage('animals')" class="px-6 py-2 border border-white/20 rounded-full text-white hover:bg-white/10">
+                        ← Back to Categories
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="glass-card overflow-hidden">
+                        <img src="https://loremflickr.com/400/300/macaw" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-white">Rio</h3>
+                            <p class="text-gray-400 mb-4">Macaw • 5 Years</p>
+                            <button onclick="showPage('login')" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-bold">Adopt Me</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PRESCRIBE PET (VET) ==================== -->
+        <section id="prescribe" class="page-section">
+            <div class="max-w-7xl mx-auto px-6">
+                <h1 class="text-4xl font-bold text-white text-center mb-4">Vet Directory</h1>
+                <p class="text-gray-300 text-center mb-12">Find trusted veterinarians in your area</p>
+
+                <!-- Mohammadpur -->
+                <div class="mb-12">
+                    <h3 class="text-2xl text-white font-bold border-b border-white/10 pb-4 mb-6">📍 Mohammadpur</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 border-l-4 border-l-purple-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Ahmed Rahim</strong>
+                            <p class="text-gray-400">Mohammadpur Veterinary Clinic</p>
+                            <p class="text-gray-500 text-sm">24/7 Ring Road</p>
+                            <p class="text-purple-400 font-bold mt-4">📞 01711-123456</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-purple-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Nusrat Jahan</strong>
+                            <p class="text-gray-400">Pet Care Center</p>
+                            <p class="text-gray-500 text-sm">Zakir Hossain Road</p>
+                            <p class="text-purple-400 font-bold mt-4">📞 01822-987654</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-purple-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Karim Chowdhury</strong>
+                            <p class="text-gray-400">City Vet Hospital</p>
+                            <p class="text-gray-500 text-sm">Asad Avenue</p>
+                            <p class="text-purple-400 font-bold mt-4">📞 01923-456789</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Uttara -->
+                <div class="mb-12">
+                    <h3 class="text-2xl text-white font-bold border-b border-white/10 pb-4 mb-6">📍 Uttara</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 border-l-4 border-l-blue-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Sarah Rahman</strong>
+                            <p class="text-gray-400">Uttara Pet Hospital</p>
+                            <p class="text-gray-500 text-sm">Sector 7</p>
+                            <p class="text-blue-400 font-bold mt-4">📞 01611-223344</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-blue-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Rafiqul Islam</strong>
+                            <p class="text-gray-400">Sector 13 Vet Care</p>
+                            <p class="text-gray-500 text-sm">Sector 13</p>
+                            <p class="text-blue-400 font-bold mt-4">📞 01521-334455</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-blue-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Fahmida Khan</strong>
+                            <p class="text-gray-400">Friends Pet Clinic</p>
+                            <p class="text-gray-500 text-sm">Sector 3</p>
+                            <p class="text-blue-400 font-bold mt-4">📞 01845-667788</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dhanmondi -->
+                <div class="mb-12">
+                    <h3 class="text-2xl text-white font-bold border-b border-white/10 pb-4 mb-6">📍 Dhanmondi</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 border-l-4 border-l-green-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Kamal Hossain</strong>
+                            <p class="text-gray-400">Dhanmondi Vet Clinic</p>
+                            <p class="text-gray-500 text-sm">Road 27</p>
+                            <p class="text-green-400 font-bold mt-4">📞 01712-998877</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-green-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Yasmin Akter</strong>
+                            <p class="text-gray-400">Pet Lovers Point</p>
+                            <p class="text-gray-500 text-sm">Satmasjid Road</p>
+                            <p class="text-green-400 font-bold mt-4">📞 01677-112233</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-green-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Tarek Hasan</strong>
+                            <p class="text-gray-400">Animal Care Hospital</p>
+                            <p class="text-gray-500 text-sm">Road 15A</p>
+                            <p class="text-green-400 font-bold mt-4">📞 01988-556644</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Farmgate -->
+                <div class="mb-12">
+                    <h3 class="text-2xl text-white font-bold border-b border-white/10 pb-4 mb-6">📍 Farmgate</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 border-l-4 border-l-red-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Mominul Haque</strong>
+                            <p class="text-gray-400">Central Vet Care</p>
+                            <p class="text-gray-500 text-sm">Indira Road</p>
+                            <p class="text-red-400 font-bold mt-4">📞 01819-223344</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-red-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Laila Begum</strong>
+                            <p class="text-gray-400">Green Road Pet Clinic</p>
+                            <p class="text-gray-500 text-sm">Green Road</p>
+                            <p class="text-red-400 font-bold mt-4">📞 01720-445566</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-red-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Shorif Uddin</strong>
+                            <p class="text-gray-400">Tejgaon Vet Center</p>
+                            <p class="text-gray-500 text-sm">Tejgaon College Rd</p>
+                            <p class="text-red-400 font-bold mt-4">📞 01633-889900</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bashundhara -->
+                <div class="mb-12">
+                    <h3 class="text-2xl text-white font-bold border-b border-white/10 pb-4 mb-6">📍 Bashundhara R/A</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 border-l-4 border-l-yellow-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Nabila Islam</strong>
+                            <p class="text-gray-400">Bashundhara Vet Care</p>
+                            <p class="text-gray-500 text-sm">Block C</p>
+                            <p class="text-yellow-400 font-bold mt-4">📞 01799-887766</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-yellow-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Zafar Iqbal</strong>
+                            <p class="text-gray-400">Pet Galaxy</p>
+                            <p class="text-gray-500 text-sm">Block I</p>
+                            <p class="text-yellow-400 font-bold mt-4">📞 01866-554433</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-yellow-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Rumana Seth</strong>
+                            <p class="text-gray-400">Apollo Vet Service</p>
+                            <p class="text-gray-500 text-sm">Near Apollo Hospital</p>
+                            <p class="text-yellow-400 font-bold mt-4">📞 01922-334455</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mirpur 11 -->
+                <div class="mb-12">
+                    <h3 class="text-2xl text-white font-bold border-b border-white/10 pb-4 mb-6">📍 Mirpur 11</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 border-l-4 border-l-teal-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Hasan Mahmud</strong>
+                            <p class="text-gray-400">Mirpur Pet Clinic</p>
+                            <p class="text-gray-500 text-sm">Main Road 11</p>
+                            <p class="text-teal-400 font-bold mt-4">📞 01715-667788</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-teal-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Salma Khatun</strong>
+                            <p class="text-gray-400">Pallabi Vet Care</p>
+                            <p class="text-gray-500 text-sm">Avenue 3</p>
+                            <p class="text-teal-400 font-bold mt-4">📞 01678-990011</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-teal-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Nasir Uddin</strong>
+                            <p class="text-gray-400">City Animal Hospital</p>
+                            <p class="text-gray-500 text-sm">Kalshi Road</p>
+                            <p class="text-teal-400 font-bold mt-4">📞 01811-223344</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mirpur 10 -->
+                <div class="mb-12">
+                    <h3 class="text-2xl text-white font-bold border-b border-white/10 pb-4 mb-6">📍 Mirpur 10</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 border-l-4 border-l-pink-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Farhana Yeasmin</strong>
+                            <p class="text-gray-400">Roundabout Vet</p>
+                            <p class="text-gray-500 text-sm">Near Circle 10</p>
+                            <p class="text-pink-400 font-bold mt-4">📞 01911-223344</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-pink-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Jamal Hossain</strong>
+                            <p class="text-gray-400">Senpara Vet Clinic</p>
+                            <p class="text-gray-500 text-sm">Senpara Parbata</p>
+                            <p class="text-pink-400 font-bold mt-4">📞 01733-445566</p>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-l-pink-500">
+                            <strong class="text-xl text-white block mb-2">Dr. Sohel Rana</strong>
+                            <p class="text-gray-400">Kazipara Pet Care</p>
+                            <p class="text-gray-500 text-sm">Begum Rokeya Sarani</p>
+                            <p class="text-pink-400 font-bold mt-4">📞 01655-778899</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== POST ANIMAL ==================== -->
+        <section id="post" class="page-section">
+            <h1 class="text-4xl font-bold text-white text-center mb-12">Post an Adoption</h1>
+            <div class="glass-card p-8 max-w-lg mx-auto">
+                <form onsubmit="event.preventDefault(); alert('Posted!');">
+                    <label class="block text-gray-300 mb-2 font-bold">Animal Type</label>
+                    <select class="glass-input w-full p-3 rounded mb-4 focus:ring-2 focus:ring-purple-500">
+                        <option class="text-black">Select...</option>
+                        <option class="text-black">Cat</option>
+                        <option class="text-black">Dog</option>
+                        <option class="text-black">Bird</option>
+                    </select>
+
+                    <label class="block text-gray-300 mb-2 font-bold">Pet Name</label>
+                    <input type="text" class="glass-input w-full p-3 rounded mb-4" placeholder="e.g. Bella">
+
+                    <!-- ADDED: Breed Name -->
+                    <label class="block text-gray-300 mb-2 font-bold">Breed Name</label>
+                    <input type="text" class="glass-input w-full p-3 rounded mb-4" placeholder="e.g. Golden Retriever">
+
+                    <label class="block text-gray-300 mb-2 font-bold">Age (Years)</label>
+                    <input type="number" class="glass-input w-full p-3 rounded mb-4">
+
+                    <!-- ADDED: Image Upload -->
+                    <label class="block text-gray-300 mb-2 font-bold">Pet Image</label>
+                    <input type="file" class="glass-input w-full p-3 rounded mb-4 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer">
+
+                    <label class="block text-gray-300 mb-2 font-bold">Description</label>
+                    <textarea class="glass-input w-full p-3 rounded mb-6" rows="3"></textarea>
+
+                    <button class="cta-button w-full py-3 rounded font-bold">Submit Post</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ==================== LOGIN ==================== -->
+        <section id="login" class="page-section centered">
+            <h1 class="text-4xl font-bold text-white text-center mb-12">Welcome Back</h1>
+            <div class="glass-card p-8 max-w-sm mx-auto w-full">
+                <form onsubmit="event.preventDefault(); alert('Logged in!'); showPage('home');">
+                    <label class="block text-gray-300 mb-2 font-bold">Username</label>
+                    <input type="text" class="glass-input w-full p-3 rounded mb-4">
+
+                    <label class="block text-gray-300 mb-2 font-bold">Password</label>
+                    <input type="password" class="glass-input w-full p-3 rounded mb-6">
+
+                    <button class="cta-button w-full py-3 rounded font-bold mb-4">Log In</button>
+                    
+                    <p class="text-center text-gray-400 text-sm">
+                        Don't have an account? <a onclick="showPage('register')" class="text-purple-400 cursor-pointer hover:underline">Register</a>
+                    </p>
+                </form>
+            </div>
+        </section>
+
+        <!-- ==================== REGISTER ==================== -->
+        <section id="register" class="page-section centered">
+            <h1 class="text-4xl font-bold text-white text-center mb-12">Create Account</h1>
+            <div class="glass-card p-8 max-w-sm mx-auto w-full">
+                <form onsubmit="event.preventDefault(); alert('Registered!'); showPage('login');">
+                    <label class="block text-gray-300 mb-2 font-bold">Full Name</label>
+                    <input type="text" class="glass-input w-full p-3 rounded mb-4" placeholder="John Doe">
+
+                    <!-- ADDED: Address Field -->
+                    <label class="block text-gray-300 mb-2 font-bold">Address</label>
+                    <input type="text" class="glass-input w-full p-3 rounded mb-4" placeholder="123 Street Name, City">
+
+                    <label class="block text-gray-300 mb-2 font-bold">Email</label>
+                    <input type="email" class="glass-input w-full p-3 rounded mb-4" placeholder="john@example.com">
+
+                    <!-- ADDED: Phone Number Field -->
+                    <label class="block text-gray-300 mb-2 font-bold">Phone Number</label>
+                    <input type="tel" class="glass-input w-full p-3 rounded mb-4" placeholder="017xxxxxxxx">
+
+                    <label class="block text-gray-300 mb-2 font-bold">Password</label>
+                    <input type="password" class="glass-input w-full p-3 rounded mb-6">
+
+                    <button class="cta-button w-full py-3 rounded font-bold mb-4">Register</button>
+                    
+                    <p class="text-center text-gray-400 text-sm">
+                        Already have an account? <a onclick="showPage('login')" class="text-purple-400 cursor-pointer hover:underline">Log in</a>
+                    </p>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER (Sticky at bottom) -->
+    <footer class="bg-slate-900 text-gray-400 text-center py-8 border-t border-white/10 mt-auto">
+        <p>&copy; 2023 Adoption Addict. All rights reserved.</p>
+        <p class="text-sm mt-2">Designed with Glassmorphism</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Page Switching Logic
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update Nav Links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('onclick').includes(pageId)) {
+                    link.classList.add('active');
+                }
+            });
+
+            window.scrollTo(0, 0);
+        }
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenuFunc() {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+
+        // Accordion Logic
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const isOpen = content.style.maxHeight;
+            
+            // Close all others
+            document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
+            
+            // Toggle current
+            if (!isOpen) {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        }
+
+        // Ripple Effect
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement("span");
+            const rect = button.getBoundingClientRect();
+            const diameter = Math.max(rect.width, rect.height);
+            const radius = diameter / 2;
+
+            ripple.style.width = ripple.style.height = `${diameter}px`;
+            ripple.style.left = `${event.clientX - rect.left - radius}px`;
+            ripple.style.top = `${event.clientY - rect.top - radius}px`;
+            ripple.classList.add("ripple");
+
+            const existingRipple = button.getElementsByClassName("ripple")[0];
+            if (existingRipple) { existingRipple.remove(); }
+
+            button.appendChild(ripple);
+        }
+
+        document.querySelectorAll('.cta-button').forEach(btn => {
+            btn.addEventListener('click', createRipple);
+        });
+
+        // Scroll Reveal Animation (Added per request)
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
