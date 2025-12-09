@@ -42,7 +42,7 @@
         ul { list-style: none; }
         img { max-width: 100%; display: block; }
 
-        /* --- UPDATED NAVBAR STYLES (MATCHING SCREENSHOT) --- */
+        /* --- UPDATED NAVBAR STYLES --- */
         header.main-header {
             position: fixed;
             top: 0;
@@ -165,6 +165,7 @@
             font-size: 1.8rem;
             cursor: pointer;
             color: white;
+            z-index: 1002; /* Ensure button stays above menu */
         }
 
         /* --- PAGE SECTIONS --- */
@@ -189,6 +190,27 @@
         h1, h2, h3 { color: var(--text); }
         h1 { margin-bottom: 1.5rem; font-size: 2.5rem; text-align: center; color: var(--primary); }
         h2 { margin-bottom: 1rem; margin-top: 2rem; color: var(--primary-dark); }
+
+        /* --- SPECIAL HEADER ROW FOR SUB-PAGES --- */
+        .page-header-row {
+            display: flex;
+            justify-content: space-between; /* This pushes Title to left, Button to right on Desktop */
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .page-header-row h1 {
+            margin: 0;
+            text-align: left;
+            font-size: 2.5rem;
+        }
+        
+        /* Force button to the right on Desktop */
+        .page-header-row .btn {
+             margin-left: auto; 
+        }
 
         /* --- BUTTONS --- */
         .btn {
@@ -367,7 +389,7 @@
 
         /* --- DOCTOR CARDS & DIRECTORY --- */
         .location-section { margin-bottom: 40px; }
-        .location-header { margin-bottom: 15px; color: var(--primary-dark); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .location-header { margin-bottom: 15px; color: var(--primary-dark); border-bottom: 2px solid #bbb; padding-bottom: 10px; }
         .doctor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .doctor-card {
             background: white; padding: 20px; border-radius: 8px;
@@ -394,7 +416,7 @@
         footer a { color: #bdc3c7; transition: color 0.3s; }
         footer a:hover { color: white; text-decoration: underline; }
 
-        /* --- RESPONSIVE --- */
+        /* --- RESPONSIVE CSS --- */
         @media (max-width: 768px) {
             .nav-menu {
                 position: absolute;
@@ -408,13 +430,33 @@
                 padding: 30px;
                 display: none;
                 box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+                /* Ensure menu stays on top */
+                z-index: 999;
             }
             .nav-menu.show { display: flex; }
             .nav-links { flex-direction: column; gap: 20px; text-align: center; }
             .mobile-menu-btn { display: block; }
             
-            /* Hide the desktop button in mobile menu list if needed, or adjust styling */
+            /* Ensure the login button shows nicely in the list */
             .btn-login { width: 100%; text-align: center; }
+
+            /* --- FIXED PAGE HEADER ROW FOR MOBILE (UP AND DOWN) --- */
+            .page-header-row {
+                flex-direction: column !important; /* Stack Vertical */
+                align-items: center !important;   /* Center Align */
+                text-align: center;
+                gap: 15px;
+            }
+            .page-header-row h1 {
+                text-align: center;
+                width: 100%;
+                font-size: 2rem;
+            }
+            .page-header-row .btn {
+                margin-left: 0 !important; /* Remove auto margin */
+                width: 100%;               /* Full width button */
+            }
+            .faq-split-container { flex-direction: column; }
         }
     </style>
 </head>
@@ -431,11 +473,13 @@
             <span class="logo-text">Adoption Addict</span>
         </a>
 
+        <!-- 2. MOBILE MENU TOGGLE BUTTON -->
         <button class="mobile-menu-btn" onclick="toggleMenu()">
             <i class="fa-solid fa-bars"></i>
         </button>
 
-        <div class="nav-menu" id="nav-menu">
+        <!-- 3. NAVIGATION MENU (LINKS + LOGIN) -->
+        <nav class="nav-menu" id="main-nav">
             <ul class="nav-links">
                 <li><a onclick="showPage('home')" class="nav-link active">Home</a></li>
                 <li><a onclick="showPage('about')" class="nav-link">About</a></li>
@@ -444,9 +488,8 @@
                 <li><a onclick="showPage('post')" class="nav-link">Post</a></li>
             </ul>
             
-            <!-- 3. GRADIENT LOGIN BUTTON -->
             <button onclick="showPage('login')" class="btn-login">Login</button>
-        </div>
+        </nav>
     </div>
 </header>
 
@@ -1340,14 +1383,15 @@ function toBase64(file) {
         window.scrollTo(0, 0);
 
         // 5. Close mobile menu if open
-        document.querySelector('nav').classList.remove('show');
+        const nav = document.getElementById('main-nav');
+        if (nav) nav.classList.remove('show');
     }
 
     // Toggle Mobile Menu
     function toggleMenu() {
-        document.getElementById('main-nav').classList.toggle('show');
+        const nav = document.getElementById('main-nav');
+        if (nav) nav.classList.toggle('show');
     }
-
 </script>
 
 
